@@ -129,10 +129,12 @@
         </StackPanel>
 
         <TextBlock Grid.Row="2" HorizontalAlignment="Center" Margin="0,9,0,0" Foreground="#8F98AA" FontSize="11">
-            <Run Text="Made with &lt;3 by "/>
+            <Run Text="Crafted with "/>
+            <Run Text="&#x2665;" Foreground="#F05D6C" FontSize="12"/>
+            <Run Text=" by "/>
             <Hyperlink NavigateUri="https://github.com/5051N5KY" RequestNavigate="OpenLink" Foreground="#67B7FF">Sosinsky</Hyperlink>
-            <Run Text=". Buy me a "/>
-            <Hyperlink NavigateUri="https://buycoffee.to/sosinsky" RequestNavigate="OpenLink" Foreground="#67B7FF">coffee</Hyperlink>
+            <Run Text="  &#x2022;  Support the project &#x2014;  "/>
+            <Hyperlink NavigateUri="https://buycoffee.to/sosinsky" RequestNavigate="OpenLink" Foreground="#E6B85C">Buy me a coffee &#x2615;</Hyperlink>
         </TextBlock>
     </Grid>
 </Window>
