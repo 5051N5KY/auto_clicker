@@ -31,4 +31,11 @@ public sealed class AutoPressRulesTests
     [Fact]
     public void DurationLimitIsDetected() =>
         Assert.True(AutoPressRules.ReachedLimit(LimitMode.Duration, 0, TimeSpan.FromSeconds(5), int.MaxValue, TimeSpan.FromSeconds(5)));
+
+    [Theory]
+    [InlineData(999, 1000, false)]
+    [InlineData(1000, 1000, true)]
+    [InlineData(10000, 1000, true)]
+    public void DurationMustCoverAtLeastOneInterval(int durationMs, int intervalMs, bool expected) =>
+        Assert.Equal(expected, AutoPressRules.IsDurationValid(TimeSpan.FromMilliseconds(durationMs), intervalMs));
 }

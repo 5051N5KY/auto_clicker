@@ -27,4 +27,7 @@ public static class AutoPressRules
     public static bool ReachedLimit(LimitMode mode, long presses, TimeSpan elapsed, int pressLimit, TimeSpan durationLimit) =>
         mode == LimitMode.PressCount && presses >= pressLimit ||
         mode == LimitMode.Duration && elapsed >= durationLimit;
+
+    public static bool IsDurationValid(TimeSpan duration, int intervalMs) =>
+        duration.TotalMilliseconds >= intervalMs;
 }

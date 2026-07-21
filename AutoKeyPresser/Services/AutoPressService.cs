@@ -66,7 +66,18 @@ public sealed class AutoPressService : IDisposable
                     break;
                 }
                 var delay = AutoPressRules.GetNextDelay(options.IntervalMs, options.RandomDeviationEnabled, options.RandomDeviationMs, random);
-                await DelayWithCountdownAsync(Math.Max(1, delay - 40), token);
+                var waitMs = Math.Max(1, delay - 40);
+                if (options.LimitMode == LimitMode.Duration)
+                {
+                    var remainingMs = options.DurationLimit.TotalMilliseconds - timer.Elapsed.TotalMilliseconds;
+                    if (remainingMs <= 0)
+                    {
+                        reason = StopReason.Limit;
+                        break;
+                    }
+                    waitMs = (int)Math.Min(waitMs, Math.Ceiling(remainingMs));
+                }
+                await DelayWithCountdownAsync(waitMs, token);
             }
         }
         catch (OperationCanceledException) when (token.IsCancellationRequested) { }

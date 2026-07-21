@@ -142,12 +142,19 @@ public partial class MainWindow : Window
             duration = LimitTimeUnitCombo.SelectedIndex == 1 ? TimeSpan.FromSeconds(value) : TimeSpan.FromMilliseconds(value);
             if (duration < TimeSpan.FromMilliseconds(1) || duration > TimeSpan.FromDays(365))
                 return ShowValidation("The time limit must be between 1 ms and 365 days.");
+            if (!AutoPressRules.IsDurationValid(duration, intervalMs))
+                return ShowValidation($"The time limit must be at least as long as the interval ({FormatInterval(intervalMs)}). Use a press-count limit if you only need one press.");
         }
 
         ReadSettings(interval, deviation, delay, mode, pressLimit, duration);
         options = new AutoPressOptions(_settings.VirtualKey, intervalMs, RandomCheckBox.IsChecked == true, deviation, delay * 1000, mode, pressLimit, duration);
         return true;
     }
+
+    private static string FormatInterval(int intervalMs) =>
+        intervalMs >= 1000 && intervalMs % 1000 == 0
+            ? $"{intervalMs / 1000} s"
+            : $"{intervalMs} ms";
 
     private void ReadSettings(double interval, int deviation, int delay, LimitMode mode, int pressLimit, TimeSpan duration)
     {
