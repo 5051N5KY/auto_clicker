@@ -121,7 +121,7 @@ public partial class MainWindow : Window
     private bool TryReadOptions(out AutoPressOptions options)
     {
         options = default!;
-        if (!double.TryParse(IntervalTextBox.Text, NumberStyles.Float, CultureInfo.CurrentCulture, out var interval) ||
+        if (!int.TryParse(IntervalTextBox.Text, NumberStyles.None, CultureInfo.CurrentCulture, out var interval) ||
             !AutoPressRules.TryValidateInterval(interval, IntervalUnitCombo.SelectedIndex == 1, out var intervalMs))
             return ShowValidation("The interval must be at least 50 ms.");
         if (!int.TryParse(DeviationTextBox.Text, out var deviation) || deviation < 0 || deviation >= intervalMs)
@@ -134,11 +134,11 @@ public partial class MainWindow : Window
         var duration = TimeSpan.FromSeconds(1);
         if (mode == LimitMode.PressCount && (!int.TryParse(LimitValueTextBox.Text, out pressLimit) || pressLimit < 1))
             return ShowValidation("The press limit must be a positive whole number.");
-        if (mode == LimitMode.Duration && (!double.TryParse(LimitValueTextBox.Text, NumberStyles.Float, CultureInfo.CurrentCulture, out var durationValue) || durationValue <= 0))
-            return ShowValidation("The time limit must be a positive number.");
+        if (mode == LimitMode.Duration && (!int.TryParse(LimitValueTextBox.Text, NumberStyles.None, CultureInfo.CurrentCulture, out var durationValue) || durationValue <= 0))
+            return ShowValidation("The time limit must be a positive whole number.");
         else if (mode == LimitMode.Duration)
         {
-            var value = double.Parse(LimitValueTextBox.Text, CultureInfo.CurrentCulture);
+            var value = int.Parse(LimitValueTextBox.Text, CultureInfo.CurrentCulture);
             duration = LimitTimeUnitCombo.SelectedIndex == 1 ? TimeSpan.FromSeconds(value) : TimeSpan.FromMilliseconds(value);
             if (duration < TimeSpan.FromMilliseconds(1) || duration > TimeSpan.FromDays(365))
                 return ShowValidation("The time limit must be between 1 ms and 365 days.");
@@ -206,14 +206,20 @@ public partial class MainWindow : Window
         LimitUnitText.Visibility = LimitModeCombo.SelectedIndex == 1 ? Visibility.Visible : Visibility.Collapsed;
         LimitUnitText.Text = " presses";
         if (LimitModeCombo.SelectedIndex == 1 && !int.TryParse(LimitValueTextBox.Text, out _)) LimitValueTextBox.Text = "100";
-        if (LimitModeCombo.SelectedIndex == 2 && !double.TryParse(LimitValueTextBox.Text, NumberStyles.Float, CultureInfo.CurrentCulture, out _)) LimitValueTextBox.Text = "10";
+        if (LimitModeCombo.SelectedIndex == 2 && !int.TryParse(LimitValueTextBox.Text, NumberStyles.None, CultureInfo.CurrentCulture, out _)) LimitValueTextBox.Text = "10";
     }
 
-    private void LimitValue_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+    private void NumericTextBox_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
     {
-        e.Handled = LimitModeCombo.SelectedIndex == 1
-            ? !Regex.IsMatch(e.Text, "^[0-9]+$")
-            : !Regex.IsMatch(e.Text, "^[0-9.,]+$");
+        e.Handled = !Regex.IsMatch(e.Text, "^[0-9]+$");
+    }
+
+    private void NumericTextBox_Pasting(object sender, DataObjectPastingEventArgs e)
+    {
+        if (!e.SourceDataObject.GetDataPresent(DataFormats.UnicodeText) ||
+            e.SourceDataObject.GetData(DataFormats.UnicodeText) is not string text ||
+            !Regex.IsMatch(text, "^[0-9]+$"))
+            e.CancelCommand();
     }
 
     private async void OnClosing(object? sender, CancelEventArgs e)
@@ -227,14 +233,14 @@ public partial class MainWindow : Window
 
     private void CaptureSettingsBestEffort()
     {
-        if (double.TryParse(IntervalTextBox.Text, NumberStyles.Float, CultureInfo.CurrentCulture, out var interval) && interval > 0) _settings.Interval = interval;
+        if (int.TryParse(IntervalTextBox.Text, NumberStyles.None, CultureInfo.CurrentCulture, out var interval) && interval > 0) _settings.Interval = interval;
         if (int.TryParse(DeviationTextBox.Text, out var deviation) && deviation >= 0) _settings.RandomDeviationMs = deviation;
         if (int.TryParse(StartDelayTextBox.Text, out var delay) && delay >= 0) _settings.StartDelaySeconds = delay;
         _settings.IntervalInSeconds = IntervalUnitCombo.SelectedIndex == 1;
         _settings.RandomDeviationEnabled = RandomCheckBox.IsChecked == true;
         _settings.LimitMode = (LimitMode)Math.Max(0, LimitModeCombo.SelectedIndex);
         if (_settings.LimitMode == LimitMode.PressCount && int.TryParse(LimitValueTextBox.Text, out var count) && count > 0) _settings.PressCountLimit = count;
-        if (_settings.LimitMode == LimitMode.Duration && double.TryParse(LimitValueTextBox.Text, NumberStyles.Float, CultureInfo.CurrentCulture, out var duration) && duration > 0) _settings.DurationLimit = duration;
+        if (_settings.LimitMode == LimitMode.Duration && int.TryParse(LimitValueTextBox.Text, NumberStyles.None, CultureInfo.CurrentCulture, out var duration) && duration > 0) _settings.DurationLimit = duration;
         _settings.DurationLimitInSeconds = LimitTimeUnitCombo.SelectedIndex == 1;
         _settings.StopOnOtherKey = StopOnOtherKeyCheckBox.IsChecked == true;
     }

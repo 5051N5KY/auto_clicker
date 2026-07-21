@@ -90,22 +90,22 @@
 
                     <TextBlock Text="Interval" FontWeight="SemiBold"/>
                     <Grid Margin="0,6,0,10"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="135"/></Grid.ColumnDefinitions>
-                        <TextBox x:Name="IntervalTextBox" Text="1000" Margin="0,0,8,0"/>
+                        <TextBox x:Name="IntervalTextBox" Text="1000" Margin="0,0,8,0" PreviewTextInput="NumericTextBox_PreviewTextInput" DataObject.Pasting="NumericTextBox_Pasting"/>
                         <ComboBox x:Name="IntervalUnitCombo" Grid.Column="1" SelectedIndex="0"><ComboBoxItem Content="milliseconds"/><ComboBoxItem Content="seconds"/></ComboBox>
                     </Grid>
 
                     <CheckBox x:Name="RandomCheckBox" Content="Random deviation" Checked="RandomChanged" Unchecked="RandomChanged"/>
-                    <DockPanel Margin="22,2,0,10"><TextBlock Text="&#177;" VerticalAlignment="Center" Margin="0,0,6,0"/><TextBox x:Name="DeviationTextBox" Text="100" Width="100"/><TextBlock Text=" ms" VerticalAlignment="Center"/></DockPanel>
+                    <DockPanel Margin="22,2,0,10"><TextBlock Text="&#177;" VerticalAlignment="Center" Margin="0,0,6,0"/><TextBox x:Name="DeviationTextBox" Text="100" Width="100" PreviewTextInput="NumericTextBox_PreviewTextInput" DataObject.Pasting="NumericTextBox_Pasting"/><TextBlock Text=" ms" VerticalAlignment="Center"/></DockPanel>
 
                     <TextBlock Text="Start delay (seconds)" FontWeight="SemiBold"/>
-                    <TextBox x:Name="StartDelayTextBox" Text="3" Width="110" HorizontalAlignment="Left" Margin="0,6,0,12"/>
+                    <TextBox x:Name="StartDelayTextBox" Text="3" Width="110" HorizontalAlignment="Left" Margin="0,6,0,12" PreviewTextInput="NumericTextBox_PreviewTextInput" DataObject.Pasting="NumericTextBox_Pasting"/>
 
                     <TextBlock Text="Stop mode" FontWeight="SemiBold"/>
                     <ComboBox x:Name="LimitModeCombo" SelectedIndex="0" Margin="0,6,0,6" SelectionChanged="LimitModeChanged">
                         <ComboBoxItem Content="No limit"/><ComboBoxItem Content="After a number of presses"/><ComboBoxItem Content="After a set time"/>
                     </ComboBox>
                     <DockPanel x:Name="LimitValuePanel" Visibility="Collapsed" Margin="0,0,0,8">
-                        <TextBox x:Name="LimitValueTextBox" Text="100" Width="110" HorizontalAlignment="Left" PreviewTextInput="LimitValue_PreviewTextInput"/>
+                        <TextBox x:Name="LimitValueTextBox" Text="100" Width="110" HorizontalAlignment="Left" PreviewTextInput="NumericTextBox_PreviewTextInput" DataObject.Pasting="NumericTextBox_Pasting"/>
                         <ComboBox x:Name="LimitTimeUnitCombo" Width="135" Margin="8,0,0,0" SelectedIndex="1" Visibility="Collapsed">
                             <ComboBoxItem Content="milliseconds"/><ComboBoxItem Content="seconds"/>
                         </ComboBox>
