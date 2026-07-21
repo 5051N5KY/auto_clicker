@@ -4,6 +4,7 @@ public sealed class AppSettings
 {
     public int VirtualKey { get; set; } = 0x31;
     public string KeyName { get; set; } = "1";
+    public KeyModifiers Modifiers { get; set; }
     public double Interval { get; set; } = 1000;
     public bool IntervalInSeconds { get; set; }
     public bool RandomDeviationEnabled { get; set; }

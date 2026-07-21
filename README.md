@@ -4,7 +4,7 @@ A compact Windows desktop application that repeatedly presses a selected keyboar
 
 ## Features
 
-- Select a key by pressing it physically.
+- Select a key or a `Shift` / `Ctrl` / `Alt` combination by pressing it physically.
 - Use millisecond or second intervals (minimum 50 ms).
 - Add optional random timing deviation.
 - Configure a delayed start.

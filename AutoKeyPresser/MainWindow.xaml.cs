@@ -16,6 +16,7 @@ public partial class MainWindow : Window
     private readonly SettingsService _settingsService = new();
     private AppSettings _settings = new();
     private bool _selectingKey;
+    private KeyModifiers _pendingModifiers;
 
     public MainWindow()
     {
@@ -63,6 +64,7 @@ public partial class MainWindow : Window
 
     private void ApplySettings()
     {
+        _settings.KeyName = KeyCombinationService.GetDisplayName(_settings.VirtualKey, _settings.Modifiers);
         SelectedKeyText.Text = _settings.KeyName;
         IntervalTextBox.Text = _settings.Interval.ToString(CultureInfo.CurrentCulture);
         IntervalUnitCombo.SelectedIndex = _settings.IntervalInSeconds ? 1 : 0;
@@ -82,6 +84,7 @@ public partial class MainWindow : Window
     private void SelectKey_Click(object sender, RoutedEventArgs e)
     {
         _selectingKey = true;
+        _pendingModifiers = KeyModifiers.None;
         StatusText.Text = "Waiting for a key";
         SelectKeyButton.IsEnabled = false;
     }
@@ -90,15 +93,23 @@ public partial class MainWindow : Window
     {
         if (_selectingKey)
         {
+            if (KeyCombinationService.TryGetModifier(virtualKey, out var modifier))
+            {
+                _pendingModifiers |= modifier;
+                SelectedKeyText.Text = KeyCombinationService.GetModifierDisplayName(_pendingModifiers) + " + ...";
+                StatusText.Text = "Now press the main key";
+                return;
+            }
             _settings.VirtualKey = virtualKey;
-            _settings.KeyName = KeyNameService.GetName(virtualKey);
+            _settings.Modifiers = _pendingModifiers;
+            _settings.KeyName = KeyCombinationService.GetDisplayName(virtualKey, _pendingModifiers);
             SelectedKeyText.Text = _settings.KeyName;
             _selectingKey = false;
             SelectKeyButton.IsEnabled = true;
             StatusText.Text = "Stopped";
             return;
         }
-        if (_autoPress.IsRunning && KeyboardEventClassifier.ShouldStop(virtualKey, _settings.VirtualKey, false, StopOnOtherKeyCheckBox.IsChecked == true))
+        if (_autoPress.IsRunning && KeyboardEventClassifier.ShouldStop(virtualKey, _settings.VirtualKey, false, StopOnOtherKeyCheckBox.IsChecked == true, _settings.Modifiers))
             Stop(StopReason.Keyboard);
     });
 
@@ -147,7 +158,7 @@ public partial class MainWindow : Window
         }
 
         ReadSettings(interval, deviation, delay, mode, pressLimit, duration);
-        options = new AutoPressOptions(_settings.VirtualKey, intervalMs, RandomCheckBox.IsChecked == true, deviation, delay * 1000, mode, pressLimit, duration);
+        options = new AutoPressOptions(_settings.VirtualKey, _settings.Modifiers, intervalMs, RandomCheckBox.IsChecked == true, deviation, delay * 1000, mode, pressLimit, duration);
         return true;
     }
 

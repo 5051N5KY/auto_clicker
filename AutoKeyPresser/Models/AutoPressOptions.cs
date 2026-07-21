@@ -2,6 +2,7 @@ namespace AutoKeyPresser.Models;
 
 public sealed record AutoPressOptions(
     int VirtualKey,
+    KeyModifiers Modifiers,
     int IntervalMs,
     bool RandomDeviationEnabled,
     int RandomDeviationMs,

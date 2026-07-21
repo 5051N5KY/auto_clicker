@@ -1,13 +1,16 @@
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using AutoKeyPresser.Interop;
+using AutoKeyPresser.Models;
 
 namespace AutoKeyPresser.Services;
 
 public sealed class KeyboardInputService
 {
-    public async Task PressAsync(int virtualKey, CancellationToken cancellationToken)
+    public async Task PressAsync(int virtualKey, KeyModifiers modifiers, CancellationToken cancellationToken)
     {
+        var modifierKeys = KeyCombinationService.GetModifierVirtualKeys(modifiers);
+        foreach (var modifierKey in modifierKeys) Send(modifierKey, keyUp: false);
         Send(virtualKey, keyUp: false);
         try
         {
@@ -16,6 +19,7 @@ public sealed class KeyboardInputService
         finally
         {
             Send(virtualKey, keyUp: true);
+            for (var i = modifierKeys.Count - 1; i >= 0; i--) Send(modifierKeys[i], keyUp: true);
         }
     }
 

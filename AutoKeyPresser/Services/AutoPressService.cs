@@ -57,7 +57,7 @@ public sealed class AutoPressService : IDisposable
                     reason = StopReason.Limit;
                     break;
                 }
-                await _input.PressAsync(options.VirtualKey, token);
+                await _input.PressAsync(options.VirtualKey, options.Modifiers, token);
                 count++;
                 PressCompleted?.Invoke(count);
                 if (AutoPressRules.ReachedLimit(options.LimitMode, count, timer.Elapsed, options.PressCountLimit, options.DurationLimit))

@@ -9,7 +9,7 @@ public sealed class AutoPressServiceTests
     public async Task ConcurrentStopOnlySucceedsOnce()
     {
         using var service = new AutoPressService(new KeyboardInputService());
-        var options = new AutoPressOptions(0x31, 1000, false, 0, 10_000, LimitMode.None, 1, TimeSpan.Zero);
+        var options = new AutoPressOptions(0x31, KeyModifiers.None, 1000, false, 0, 10_000, LimitMode.None, 1, TimeSpan.Zero);
         Assert.True(service.Start(options));
 
         var results = await Task.WhenAll(Enumerable.Range(0, 20).Select(_ => Task.Run(() => service.Stop(StopReason.Manual))));
