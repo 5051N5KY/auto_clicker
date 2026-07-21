@@ -11,7 +11,8 @@ public sealed class AppSettings
     public int StartDelaySeconds { get; set; } = 3;
     public LimitMode LimitMode { get; set; }
     public int PressCountLimit { get; set; } = 100;
-    public double DurationLimitMinutes { get; set; } = 10;
+    public double DurationLimit { get; set; } = 10;
+    public bool DurationLimitInSeconds { get; set; } = true;
     public bool StopOnOtherKey { get; set; } = true;
     public bool AlwaysOnTop { get; set; }
     public bool MinimizeToTray { get; set; } = true;

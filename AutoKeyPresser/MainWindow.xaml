@@ -1,7 +1,7 @@
 <Window x:Class="AutoKeyPresser.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Auto Key Presser" Width="520" Height="592" MinWidth="500" MinHeight="572"
+        Title="Auto Key Presser" Width="520" Height="635" MinWidth="500" MinHeight="615"
         WindowStartupLocation="CenterScreen" Background="#0F1117" Foreground="#E8ECF3">
     <Window.Resources>
         <SolidColorBrush x:Key="FieldBackground" Color="#20242E"/>
@@ -105,7 +105,10 @@
                         <ComboBoxItem Content="No limit"/><ComboBoxItem Content="After a number of presses"/><ComboBoxItem Content="After a set time"/>
                     </ComboBox>
                     <DockPanel x:Name="LimitValuePanel" Visibility="Collapsed" Margin="0,0,0,8">
-                        <TextBox x:Name="LimitValueTextBox" Text="100" Width="110" HorizontalAlignment="Left"/>
+                        <TextBox x:Name="LimitValueTextBox" Text="100" Width="110" HorizontalAlignment="Left" PreviewTextInput="LimitValue_PreviewTextInput"/>
+                        <ComboBox x:Name="LimitTimeUnitCombo" Width="135" Margin="8,0,0,0" SelectedIndex="1" Visibility="Collapsed">
+                            <ComboBoxItem Content="milliseconds"/><ComboBoxItem Content="seconds"/>
+                        </ComboBox>
                         <TextBlock x:Name="LimitUnitText" Text=" presses" VerticalAlignment="Center"/>
                     </DockPanel>
 

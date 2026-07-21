@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Diagnostics;
 using System.Windows.Navigation;
+using System.Text.RegularExpressions;
 using AutoKeyPresser.Models;
 using AutoKeyPresser.Services;
 
@@ -70,8 +71,9 @@ public partial class MainWindow : Window
         StartDelayTextBox.Text = _settings.StartDelaySeconds.ToString();
         LimitModeCombo.SelectedIndex = (int)_settings.LimitMode;
         LimitValueTextBox.Text = _settings.LimitMode == LimitMode.Duration
-            ? _settings.DurationLimitMinutes.ToString(CultureInfo.CurrentCulture)
+            ? _settings.DurationLimit.ToString(CultureInfo.CurrentCulture)
             : _settings.PressCountLimit.ToString();
+        LimitTimeUnitCombo.SelectedIndex = _settings.DurationLimitInSeconds ? 1 : 0;
         StopOnOtherKeyCheckBox.IsChecked = _settings.StopOnOtherKey;
         RandomChanged(this, new RoutedEventArgs());
         LimitModeChanged(this, null!);
@@ -129,13 +131,18 @@ public partial class MainWindow : Window
 
         var mode = (LimitMode)LimitModeCombo.SelectedIndex;
         var pressLimit = 1;
-        var duration = TimeSpan.FromMinutes(1);
+        var duration = TimeSpan.FromSeconds(1);
         if (mode == LimitMode.PressCount && (!int.TryParse(LimitValueTextBox.Text, out pressLimit) || pressLimit < 1))
             return ShowValidation("The press limit must be a positive whole number.");
-        if (mode == LimitMode.Duration && (!double.TryParse(LimitValueTextBox.Text, NumberStyles.Float, CultureInfo.CurrentCulture, out var minutes) || minutes <= 0 || minutes > 525600))
-            return ShowValidation("The time limit must be a positive number of minutes.");
+        if (mode == LimitMode.Duration && (!double.TryParse(LimitValueTextBox.Text, NumberStyles.Float, CultureInfo.CurrentCulture, out var durationValue) || durationValue <= 0))
+            return ShowValidation("The time limit must be a positive number.");
         else if (mode == LimitMode.Duration)
-            duration = TimeSpan.FromMinutes(double.Parse(LimitValueTextBox.Text, CultureInfo.CurrentCulture));
+        {
+            var value = double.Parse(LimitValueTextBox.Text, CultureInfo.CurrentCulture);
+            duration = LimitTimeUnitCombo.SelectedIndex == 1 ? TimeSpan.FromSeconds(value) : TimeSpan.FromMilliseconds(value);
+            if (duration < TimeSpan.FromMilliseconds(1) || duration > TimeSpan.FromDays(365))
+                return ShowValidation("The time limit must be between 1 ms and 365 days.");
+        }
 
         ReadSettings(interval, deviation, delay, mode, pressLimit, duration);
         options = new AutoPressOptions(_settings.VirtualKey, intervalMs, RandomCheckBox.IsChecked == true, deviation, delay * 1000, mode, pressLimit, duration);
@@ -151,7 +158,8 @@ public partial class MainWindow : Window
         _settings.StartDelaySeconds = delay;
         _settings.LimitMode = mode;
         _settings.PressCountLimit = pressLimit;
-        _settings.DurationLimitMinutes = duration.TotalMinutes;
+        _settings.DurationLimit = LimitTimeUnitCombo.SelectedIndex == 1 ? duration.TotalSeconds : duration.TotalMilliseconds;
+        _settings.DurationLimitInSeconds = LimitTimeUnitCombo.SelectedIndex == 1;
         _settings.StopOnOtherKey = StopOnOtherKeyCheckBox.IsChecked == true;
     }
 
@@ -187,7 +195,18 @@ public partial class MainWindow : Window
     {
         if (LimitValuePanel is null) return;
         LimitValuePanel.Visibility = LimitModeCombo.SelectedIndex == 0 ? Visibility.Collapsed : Visibility.Visible;
-        LimitUnitText.Text = LimitModeCombo.SelectedIndex == 2 ? " minutes" : " presses";
+        LimitTimeUnitCombo.Visibility = LimitModeCombo.SelectedIndex == 2 ? Visibility.Visible : Visibility.Collapsed;
+        LimitUnitText.Visibility = LimitModeCombo.SelectedIndex == 1 ? Visibility.Visible : Visibility.Collapsed;
+        LimitUnitText.Text = " presses";
+        if (LimitModeCombo.SelectedIndex == 1 && !int.TryParse(LimitValueTextBox.Text, out _)) LimitValueTextBox.Text = "100";
+        if (LimitModeCombo.SelectedIndex == 2 && !double.TryParse(LimitValueTextBox.Text, NumberStyles.Float, CultureInfo.CurrentCulture, out _)) LimitValueTextBox.Text = "10";
+    }
+
+    private void LimitValue_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+    {
+        e.Handled = LimitModeCombo.SelectedIndex == 1
+            ? !Regex.IsMatch(e.Text, "^[0-9]+$")
+            : !Regex.IsMatch(e.Text, "^[0-9.,]+$");
     }
 
     private async void OnClosing(object? sender, CancelEventArgs e)
@@ -208,7 +227,8 @@ public partial class MainWindow : Window
         _settings.RandomDeviationEnabled = RandomCheckBox.IsChecked == true;
         _settings.LimitMode = (LimitMode)Math.Max(0, LimitModeCombo.SelectedIndex);
         if (_settings.LimitMode == LimitMode.PressCount && int.TryParse(LimitValueTextBox.Text, out var count) && count > 0) _settings.PressCountLimit = count;
-        if (_settings.LimitMode == LimitMode.Duration && double.TryParse(LimitValueTextBox.Text, NumberStyles.Float, CultureInfo.CurrentCulture, out var minutes) && minutes > 0) _settings.DurationLimitMinutes = minutes;
+        if (_settings.LimitMode == LimitMode.Duration && double.TryParse(LimitValueTextBox.Text, NumberStyles.Float, CultureInfo.CurrentCulture, out var duration) && duration > 0) _settings.DurationLimit = duration;
+        _settings.DurationLimitInSeconds = LimitTimeUnitCombo.SelectedIndex == 1;
         _settings.StopOnOtherKey = StopOnOtherKeyCheckBox.IsChecked == true;
     }
 }
