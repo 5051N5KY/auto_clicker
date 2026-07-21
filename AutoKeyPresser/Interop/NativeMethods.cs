@@ -6,7 +6,9 @@ internal static class NativeMethods
 {
     internal const int WhKeyboardLl = 13;
     internal const int WmKeyDown = 0x0100;
+    internal const int WmKeyUp = 0x0101;
     internal const int WmSysKeyDown = 0x0104;
+    internal const int WmSysKeyUp = 0x0105;
     internal const uint KeyEventFKeyUp = 0x0002;
     internal const uint InputKeyboard = 1;
     internal const uint LlkfInjected = 0x00000010;

@@ -86,6 +86,7 @@
                             <TextBlock x:Name="SelectedKeyText" Text="1" FontSize="16" FontWeight="SemiBold"/>
                         </Border>
                         <Button x:Name="SelectKeyButton" Content="Select key" Click="SelectKey_Click" HorizontalAlignment="Left"/>
+                        <Button x:Name="CancelKeyButton" Content="Cancel" Click="CancelKey_Click" HorizontalAlignment="Left" Visibility="Collapsed"/>
                     </DockPanel>
 
                     <TextBlock Text="Interval" FontWeight="SemiBold"/>

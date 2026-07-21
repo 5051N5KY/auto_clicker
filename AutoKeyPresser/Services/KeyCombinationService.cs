@@ -56,4 +56,7 @@ public static class KeyCombinationService
         if (modifiers.HasFlag(KeyModifiers.Alt)) parts.Add("Alt");
         return string.Join(" + ", parts);
     }
+
+    public static KeyModifiers RemoveModifier(KeyModifiers modifiers, int virtualKey) =>
+        TryGetModifier(virtualKey, out var released) ? modifiers & ~released : modifiers;
 }

@@ -9,6 +9,7 @@ public sealed class KeyboardHookService : IDisposable
     private readonly NativeMethods.LowLevelKeyboardProc _callback;
     private IntPtr _hook;
     public event Action<int>? PhysicalKeyDown;
+    public event Action<int>? PhysicalKeyUp;
 
     public KeyboardHookService() => _callback = HookCallback;
 
@@ -22,11 +23,16 @@ public sealed class KeyboardHookService : IDisposable
 
     private IntPtr HookCallback(int code, IntPtr wParam, IntPtr lParam)
     {
-        if (code >= 0 && (wParam == (IntPtr)NativeMethods.WmKeyDown || wParam == (IntPtr)NativeMethods.WmSysKeyDown))
+        if (code >= 0)
         {
             var data = Marshal.PtrToStructure<NativeMethods.KbdLlHookStruct>(lParam);
             if (!KeyboardEventClassifier.IsGeneratedByApplication(data.flags, data.dwExtraInfo))
-                PhysicalKeyDown?.Invoke((int)data.vkCode);
+            {
+                if (wParam == (IntPtr)NativeMethods.WmKeyDown || wParam == (IntPtr)NativeMethods.WmSysKeyDown)
+                    PhysicalKeyDown?.Invoke((int)data.vkCode);
+                else if (wParam == (IntPtr)NativeMethods.WmKeyUp || wParam == (IntPtr)NativeMethods.WmSysKeyUp)
+                    PhysicalKeyUp?.Invoke((int)data.vkCode);
+            }
         }
         return NativeMethods.CallNextHookEx(_hook, code, wParam, lParam);
     }

@@ -33,6 +33,10 @@ public sealed class KeyboardEventClassifierTests
         Assert.Equal("Ctrl + Shift + Q", KeyCombinationService.GetDisplayName(0x51, KeyModifiers.Control | KeyModifiers.Shift));
 
     [Fact]
+    public void ReleasedModifierIsRemovedFromPendingCombination() =>
+        Assert.Equal(KeyModifiers.Control, KeyCombinationService.RemoveModifier(KeyModifiers.Control | KeyModifiers.Shift, 0xA0));
+
+    [Fact]
     public void InjectedFlagIsRecognized() =>
         Assert.True(KeyboardEventClassifier.IsGeneratedByApplication(0x10, UIntPtr.Zero));
 

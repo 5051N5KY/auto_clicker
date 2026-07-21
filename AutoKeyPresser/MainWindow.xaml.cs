@@ -24,6 +24,7 @@ public partial class MainWindow : Window
         Loaded += OnLoaded;
         Closing += OnClosing;
         _keyboardHook.PhysicalKeyDown += OnPhysicalKeyDown;
+        _keyboardHook.PhysicalKeyUp += OnPhysicalKeyUp;
         _autoPress.DelayStarted += () => Dispatcher.BeginInvoke(() => StatusText.Text = "Starting delay");
         _autoPress.Active += () => Dispatcher.BeginInvoke(() => StatusText.Text = "Active");
         _autoPress.NextPressInChanged += remaining => Dispatcher.BeginInvoke(() =>
@@ -87,6 +88,8 @@ public partial class MainWindow : Window
         _pendingModifiers = KeyModifiers.None;
         StatusText.Text = "Waiting for a key";
         SelectKeyButton.IsEnabled = false;
+        CancelKeyButton.Visibility = Visibility.Visible;
+        SelectedKeyText.Text = "Press a key...";
     }
 
     private void OnPhysicalKeyDown(int virtualKey) => Dispatcher.BeginInvoke(() =>
@@ -106,12 +109,33 @@ public partial class MainWindow : Window
             SelectedKeyText.Text = _settings.KeyName;
             _selectingKey = false;
             SelectKeyButton.IsEnabled = true;
+            CancelKeyButton.Visibility = Visibility.Collapsed;
             StatusText.Text = "Stopped";
             return;
         }
         if (_autoPress.IsRunning && KeyboardEventClassifier.ShouldStop(virtualKey, _settings.VirtualKey, false, StopOnOtherKeyCheckBox.IsChecked == true, _settings.Modifiers))
             Stop(StopReason.Keyboard);
     });
+
+    private void OnPhysicalKeyUp(int virtualKey) => Dispatcher.BeginInvoke(() =>
+    {
+        if (!_selectingKey || !KeyCombinationService.TryGetModifier(virtualKey, out _)) return;
+        _pendingModifiers = KeyCombinationService.RemoveModifier(_pendingModifiers, virtualKey);
+        SelectedKeyText.Text = _pendingModifiers == KeyModifiers.None
+            ? "Press a key..."
+            : KeyCombinationService.GetModifierDisplayName(_pendingModifiers) + " + ...";
+        StatusText.Text = _pendingModifiers == KeyModifiers.None ? "Waiting for a key" : "Now press the main key";
+    });
+
+    private void CancelKey_Click(object sender, RoutedEventArgs e)
+    {
+        _selectingKey = false;
+        _pendingModifiers = KeyModifiers.None;
+        SelectedKeyText.Text = _settings.KeyName;
+        SelectKeyButton.IsEnabled = true;
+        CancelKeyButton.Visibility = Visibility.Collapsed;
+        StatusText.Text = "Stopped";
+    }
 
     private void Start_Click(object sender, RoutedEventArgs e) => Start();
     private void Stop_Click(object sender, RoutedEventArgs e) => Stop(StopReason.Manual);
