@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using System.Globalization;
 using System.Windows;
+using System.Diagnostics;
+using System.Windows.Navigation;
 using AutoKeyPresser.Models;
 using AutoKeyPresser.Services;
 
@@ -37,6 +39,12 @@ public partial class MainWindow : Window
         remaining.TotalSeconds >= 10
             ? $"{remaining.TotalSeconds:0.0} s"
             : $"{remaining.TotalSeconds:0.00} s";
+
+    private void OpenLink(object sender, RequestNavigateEventArgs e)
+    {
+        Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
+        e.Handled = true;
+    }
 
     private async void OnLoaded(object sender, RoutedEventArgs e)
     {

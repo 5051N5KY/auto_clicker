@@ -1,7 +1,7 @@
 <Window x:Class="AutoKeyPresser.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Auto Key Presser" Width="520" Height="570" MinWidth="500" MinHeight="550"
+        Title="Auto Key Presser" Width="520" Height="592" MinWidth="500" MinHeight="572"
         WindowStartupLocation="CenterScreen" Background="#0F1117" Foreground="#E8ECF3">
     <Window.Resources>
         <SolidColorBrush x:Key="FieldBackground" Color="#20242E"/>
@@ -76,7 +76,7 @@
         </Style>
     </Window.Resources>
     <Grid Margin="24">
-        <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
 
         <Border Grid.Row="0" Background="#171A21" CornerRadius="10" Padding="18" BorderBrush="#303642" BorderThickness="1">
             <StackPanel x:Name="ConfigurationPanel">
@@ -127,5 +127,12 @@
                 </Grid>
             </Border>
         </StackPanel>
+
+        <TextBlock Grid.Row="2" HorizontalAlignment="Center" Margin="0,9,0,0" Foreground="#8F98AA" FontSize="11">
+            <Run Text="Made with &lt;3 by "/>
+            <Hyperlink NavigateUri="https://github.com/5051N5KY" RequestNavigate="OpenLink" Foreground="#67B7FF">Sosinsky</Hyperlink>
+            <Run Text=". Buy me a "/>
+            <Hyperlink NavigateUri="https://buycoffee.to/sosinsky" RequestNavigate="OpenLink" Foreground="#67B7FF">coffee</Hyperlink>
+        </TextBlock>
     </Grid>
 </Window>
