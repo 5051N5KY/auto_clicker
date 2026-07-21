@@ -65,6 +65,7 @@ public partial class MainWindow : Window
 
     private void ApplySettings()
     {
+        _settings.VirtualKey = KeyCombinationService.NormalizeMainKey(_settings.VirtualKey, _settings.Modifiers);
         _settings.KeyName = KeyCombinationService.GetDisplayName(_settings.VirtualKey, _settings.Modifiers);
         SelectedKeyText.Text = _settings.KeyName;
         IntervalTextBox.Text = _settings.Interval.ToString(CultureInfo.CurrentCulture);
@@ -103,6 +104,7 @@ public partial class MainWindow : Window
                 StatusText.Text = "Now press the main key";
                 return;
             }
+            virtualKey = KeyCombinationService.NormalizeMainKey(virtualKey, _pendingModifiers);
             _settings.VirtualKey = virtualKey;
             _settings.Modifiers = _pendingModifiers;
             _settings.KeyName = KeyCombinationService.GetDisplayName(virtualKey, _pendingModifiers);

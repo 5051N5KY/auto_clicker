@@ -4,6 +4,8 @@ namespace AutoKeyPresser.Services;
 
 public static class KeyCombinationService
 {
+    private const int VkClear = 0x0C;
+    private const int VkNumPad5 = 0x65;
     private const int VkShift = 0x10;
     private const int VkControl = 0x11;
     private const int VkAlt = 0x12;
@@ -25,6 +27,11 @@ public static class KeyCombinationService
         };
         return modifier != KeyModifiers.None;
     }
+
+    // Windows reports Shift + Num 5 as VK_CLEAR. Preserve the physical,
+    // user-facing key and send it back as Num 5.
+    public static int NormalizeMainKey(int virtualKey, KeyModifiers modifiers) =>
+        virtualKey == VkClear && modifiers.HasFlag(KeyModifiers.Shift) ? VkNumPad5 : virtualKey;
 
     public static IReadOnlyList<int> GetModifierVirtualKeys(KeyModifiers modifiers)
     {

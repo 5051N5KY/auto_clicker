@@ -36,6 +36,21 @@ public sealed class KeyboardEventClassifierTests
     public void ReleasedModifierIsRemovedFromPendingCombination() =>
         Assert.Equal(KeyModifiers.Control, KeyCombinationService.RemoveModifier(KeyModifiers.Control | KeyModifiers.Shift, 0xA0));
 
+    [Theory]
+    [InlineData(0x31, "1")]
+    [InlineData(0x41, "A")]
+    [InlineData(0x65, "Num 5")]
+    [InlineData(0x70, "F1")]
+    [InlineData(0x20, "Space")]
+    [InlineData(0x25, "Left Arrow")]
+    [InlineData(0x08, "Backspace")]
+    public void KeyNamesAreUserFriendly(int virtualKey, string expected) =>
+        Assert.Equal(expected, KeyNameService.GetName(virtualKey));
+
+    [Fact]
+    public void ShiftNumFiveIsNormalizedFromClear() =>
+        Assert.Equal(0x65, KeyCombinationService.NormalizeMainKey(0x0C, KeyModifiers.Shift));
+
     [Fact]
     public void InjectedFlagIsRecognized() =>
         Assert.True(KeyboardEventClassifier.IsGeneratedByApplication(0x10, UIntPtr.Zero));
