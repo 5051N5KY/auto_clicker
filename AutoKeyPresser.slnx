@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="AutoKeyPresser.Tests/AutoKeyPresser.Tests.csproj" />
+  <Project Path="AutoKeyPresser/AutoKeyPresser.csproj" />
+</Solution>
