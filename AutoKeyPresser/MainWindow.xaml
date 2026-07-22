@@ -1,7 +1,7 @@
 <Window x:Class="AutoKeyPresser.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Auto Key Presser" Width="520" Height="680" MinWidth="500" MinHeight="660"
+        Title="Auto Key Presser" Icon="Assets/AppIcon.ico" Width="520" Height="680" MinWidth="500" MinHeight="660"
         WindowStartupLocation="CenterScreen" Background="#0F1117" Foreground="#E8ECF3">
     <Window.Resources>
         <SolidColorBrush x:Key="FieldBackground" Color="#20242E"/>
