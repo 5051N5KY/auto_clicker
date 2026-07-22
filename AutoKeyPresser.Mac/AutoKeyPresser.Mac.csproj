@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>AutoKeyPresser</AssemblyName>
+    <RootNamespace>AutoKeyPresser.Mac</RootNamespace>
+    <RuntimeIdentifier>osx-arm64</RuntimeIdentifier>
+    <RuntimeIdentifiers>osx-arm64</RuntimeIdentifiers>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <DebugType>None</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="12.1.0" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.1.0" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+    <Compile Include="..\AutoKeyPresser\Models\AutoPressOptions.cs" Link="Models\AutoPressOptions.cs" />
+    <Compile Include="..\AutoKeyPresser\Models\KeyModifiers.cs" Link="Models\KeyModifiers.cs" />
+    <Compile Include="..\AutoKeyPresser\Models\LimitMode.cs" Link="Models\LimitMode.cs" />
+    <Compile Include="..\AutoKeyPresser\Models\StopReason.cs" Link="Models\StopReason.cs" />
+    <Compile Include="..\AutoKeyPresser\Services\AutoPressRules.cs" Link="Services\AutoPressRules.cs" />
+    <Compile Include="..\AutoKeyPresser\Services\SettingsService.cs" Link="Services\SettingsService.cs" />
+  </ItemGroup>
+</Project>

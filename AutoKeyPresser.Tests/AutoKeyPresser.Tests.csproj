@@ -17,4 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AutoKeyPresser\AutoKeyPresser.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\AutoKeyPresser.Mac\Services\MacKeyService.cs" Link="Mac\MacKeyService.cs" />
+  </ItemGroup>
 </Project>

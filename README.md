@@ -1,12 +1,29 @@
 # Auto Key Presser
 
-A simple Windows app that automatically presses a key or keyboard combination at the interval you choose.
+A simple app that automatically presses a key or keyboard combination at the interval you choose. Available for Windows and Apple Silicon Macs.
 
 ## Download
+
+### Windows
 
 Download [`AutoKeyPresser.exe`](dist/AutoKeyPresser.exe), place it anywhere you like, and open it. The app is portable and does not need to be installed.
 
 Windows may show an “Unknown publisher” message on the first launch. Choose **More info**, then **Run anyway** if you downloaded the file from this repository.
+
+### macOS — Apple Silicon only
+
+Open the latest successful **Build macOS Apple Silicon** workflow in the repository’s Actions tab and download the `AutoKeyPresser-macOS-arm64` artifact. Unzip it and move `AutoKeyPresser.app` to Applications.
+
+This build supports Apple Silicon (`arm64`), including M5. Intel Macs and Rosetta are intentionally not supported.
+
+On first launch:
+
+1. Right-click `AutoKeyPresser.app` and choose **Open**.
+2. Allow the app when macOS asks for keyboard access.
+3. If needed, open **System Settings → Privacy & Security** and enable Auto Key Presser under **Accessibility** and **Input Monitoring**.
+4. Restart the app after granting permissions.
+
+The macOS package is currently ad-hoc signed for testing. A notarized public release requires an Apple Developer ID certificate.
 
 ## How to use it
 
@@ -20,9 +37,9 @@ You can also choose combinations such as:
 - `Shift + 2`
 - `Ctrl + Q`
 - `Ctrl + 1`
-- `Alt + 1`
+- `Alt + 1` on Windows or `Option + 1` on macOS
 
-Press and hold the modifier, then press the main key. If you release `Shift`, `Ctrl`, or `Alt` before choosing the main key, it is removed from the combination.
+Press and hold the modifier, then press the main key. If you release `Shift`, `Ctrl`, `Alt`, or `Option` before choosing the main key, it is removed from the combination.
 
 Click **Cancel** to keep the previously selected key.
 

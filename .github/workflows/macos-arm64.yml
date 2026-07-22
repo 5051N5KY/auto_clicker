@@ -1,0 +1,34 @@
+name: Build macOS Apple Silicon
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - "AutoKeyPresser.Mac/**"
+      - "AutoKeyPresser/Models/**"
+      - "AutoKeyPresser/Services/AutoPressRules.cs"
+      - "AutoKeyPresser/Services/SettingsService.cs"
+      - "scripts/package-macos-arm64.sh"
+      - ".github/workflows/macos-arm64.yml"
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+      - name: Build Apple Silicon app
+        run: bash scripts/package-macos-arm64.sh
+      - name: Verify ARM64 executable and bundle
+        run: |
+          file dist-macos/AutoKeyPresser.app/Contents/MacOS/AutoKeyPresser | grep arm64
+          codesign --verify --deep --strict dist-macos/AutoKeyPresser.app
+      - name: Upload macOS package
+        uses: actions/upload-artifact@v4
+        with:
+          name: AutoKeyPresser-macOS-arm64
+          path: dist-macos/AutoKeyPresser-macOS-arm64.zip
+          if-no-files-found: error
