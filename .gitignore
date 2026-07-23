@@ -2,6 +2,6 @@ bin/
 obj/
 .vs/
 TestResults/
-dist-macos/
+dist/MacSilicon/AutoKeyPresser.app/
 *.user
 *.suo

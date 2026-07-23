@@ -24,11 +24,11 @@ jobs:
         run: bash scripts/package-macos-arm64.sh
       - name: Verify ARM64 executable and bundle
         run: |
-          file dist-macos/AutoKeyPresser.app/Contents/MacOS/AutoKeyPresser | grep arm64
-          codesign --verify --deep --strict dist-macos/AutoKeyPresser.app
+          file dist/MacSilicon/AutoKeyPresser.app/Contents/MacOS/AutoKeyPresser | grep arm64
+          codesign --verify --deep --strict dist/MacSilicon/AutoKeyPresser.app
       - name: Upload macOS package
         uses: actions/upload-artifact@v4
         with:
           name: AutoKeyPresser-macOS-arm64
-          path: dist-macos/AutoKeyPresser-macOS-arm64.zip
+          path: dist/MacSilicon/AutoKeyPresser-macOS-arm64.zip
           if-no-files-found: error

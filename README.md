@@ -6,22 +6,33 @@ A simple app that automatically presses a key or keyboard combination at the int
 
 ### Windows
 
-Download [`AutoKeyPresser.exe`](dist/AutoKeyPresser.exe), place it anywhere you like, and open it. The app is portable and does not need to be installed.
+Download [`AutoKeyPresser.exe`](dist/Windows/AutoKeyPresser.exe), place it anywhere you like, and open it. The app is portable and does not need to be installed.
 
 Windows may show an “Unknown publisher” message on the first launch. Choose **More info**, then **Run anyway** if you downloaded the file from this repository.
 
 ### macOS — Apple Silicon only
 
-Open the latest successful **Build macOS Apple Silicon** workflow in the repository’s Actions tab and download the `AutoKeyPresser-macOS-arm64` artifact. Unzip it and move `AutoKeyPresser.app` to Applications.
-
 This build supports Apple Silicon (`arm64`), including M5. Intel Macs and Rosetta are intentionally not supported.
 
-On first launch:
+#### Installation
 
-1. Right-click `AutoKeyPresser.app` and choose **Open**.
-2. Allow the app when macOS asks for keyboard access.
-3. If needed, open **System Settings → Privacy & Security** and enable Auto Key Presser under **Accessibility** and **Input Monitoring**.
-4. Restart the app after granting permissions.
+1. Download [`AutoKeyPresser-macOS-arm64.zip`](dist/MacSilicon/AutoKeyPresser-macOS-arm64.zip).
+2. Double-click the downloaded ZIP file to unpack it.
+3. Move `AutoKeyPresser.app` to the **Applications** folder.
+4. In **Applications**, right-click `AutoKeyPresser.app` and choose **Open**.
+5. Confirm that you want to open the app.
+
+If macOS blocks the app completely, open **System Settings → Privacy & Security**, find the message about Auto Key Presser, and click **Open Anyway**.
+
+#### Required permissions
+
+Auto Key Presser needs permission to detect and send keyboard input:
+
+1. Open **System Settings → Privacy & Security → Accessibility** and enable Auto Key Presser.
+2. Open **System Settings → Privacy & Security → Input Monitoring** and enable Auto Key Presser.
+3. Fully close Auto Key Presser and open it again.
+
+The app does not use a traditional installer. Moving `AutoKeyPresser.app` to **Applications** completes the installation.
 
 The macOS package is currently ad-hoc signed for testing. A notarized public release requires an Apple Developer ID certificate.
 

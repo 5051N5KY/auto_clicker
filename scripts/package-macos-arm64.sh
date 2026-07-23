@@ -4,11 +4,11 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PROJECT="$ROOT/AutoKeyPresser.Mac/AutoKeyPresser.Mac.csproj"
 PUBLISH="$ROOT/AutoKeyPresser.Mac/bin/Release/net8.0/osx-arm64/publish"
-OUTPUT="$ROOT/dist-macos"
+OUTPUT="$ROOT/dist/MacSilicon"
 APP="$OUTPUT/AutoKeyPresser.app"
 
 dotnet publish "$PROJECT" -c Release -r osx-arm64 --self-contained true --configfile "$ROOT/NuGet.Config"
-rm -rf "$OUTPUT"
+rm -rf "$APP" "$OUTPUT/AutoKeyPresser-macOS-arm64.zip"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp -R "$PUBLISH/"* "$APP/Contents/MacOS/"
 cp "$ROOT/AutoKeyPresser.Mac/Packaging/Info.plist" "$APP/Contents/Info.plist"
